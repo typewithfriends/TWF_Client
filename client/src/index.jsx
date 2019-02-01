@@ -7,7 +7,7 @@ import App from './components/App/App.jsx';
 import reducers from './reducers/index.js';
 
 ReactDOM.render(
-  <Provider store={createStore(reducers)}>
+  <Provider store={ createStore(reducers) }>
     <App />
   </Provider>, 
   document.getElementById('app'));

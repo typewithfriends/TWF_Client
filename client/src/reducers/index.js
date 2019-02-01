@@ -1,5 +1,19 @@
 import { combineReducers } from 'redux';
 
+const changeViewReducer = (view = 'splash', action) => {
+  if (action.type === 'CHANGE_VIEW') {
+    return action.payload;
+  }
+  return view;
+}
+
+const getUsernameReducer = (username = '', action) => {
+  if (action.type === 'GET_USERNAME') {
+    return action.payload;
+  }
+  return username;
+}
+
 const getPromptReducer = (prompt = '', action) => {
   if (action.type === 'GET_PROMPT') {
     return action.payload;
@@ -14,8 +28,8 @@ const getCurrentLetterReducer = (current = 0, action) => {
   return current;
 }
 
-const getProgessReducer = (progress = 0, action) => {
-  if (action.type === 'GET_PROGRESS') {
+const updateProgessReducer = (progress = 0, action) => {
+  if (action.type === 'UPDATE_PROGRESS') {
     return action.payload;
   }
   return progress;
@@ -29,7 +43,9 @@ const getProgessReducer = (progress = 0, action) => {
 // }
 
 export default combineReducers({
+  view: changeViewReducer,
+  username: getUsernameReducer,
   prompt: getPromptReducer,
   currentLetter: getCurrentLetterReducer,
-  progress: getProgessReducer
+  progress: updateProgessReducer
 });

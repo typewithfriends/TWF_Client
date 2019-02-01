@@ -7,6 +7,20 @@
 //   }
 // }
 
+export const changeView = view => {
+  return {
+    type: 'CHANGE_VIEW',
+    payload: view
+  }
+}
+
+export const getUsername = username => {
+  return {
+    type: 'GET_USERNAME',
+    payload: username
+  }
+}
+
 export const getPrompt = prompt => {
   return {
     type: 'GET_PROMPT',
@@ -21,16 +35,16 @@ export const getCurrentLetter = current => {
   }
 }
 
-export const getProgress = progress => {
+export const updateProgress = progress => {
   return {
-    type: 'GET_PROGRESS',
+    type: 'UPDATE_PROGRESS',
     payload: progress
   }
 }
 
-export const updateMessage = message => {
-  return {
-    type: 'UPDATE_MESSAGE',
-    payload: message
-  }
-}
+// export const updateMessage = message => {
+//   return {
+//     type: 'UPDATE_MESSAGE',
+//     payload: message
+//   }
+// }
