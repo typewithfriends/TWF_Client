@@ -41,5 +41,3 @@ export default connect(mapStateToProps, {
   changeView,
   getUsername
 })(Splash);
-
-// 

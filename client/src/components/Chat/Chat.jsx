@@ -38,7 +38,6 @@ class Chat extends React.Component {
   }
 
   render() {
-    // 
     return (
       <div onClick={this.props.getChatFocus} className="chat">
         <div id="output" className="chatbox"></div>
