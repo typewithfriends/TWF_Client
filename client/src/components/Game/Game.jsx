@@ -2,6 +2,7 @@ import './game.css';
 import React from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
+
 import { getPrompt } from '../../actions/getPrompt.js'
 import { getCurrentLetter } from '../../actions/getCurrentLetter.js'
 import { updateProgress } from '../../actions/updateProgress.js'
@@ -9,8 +10,6 @@ import { updateProgress } from '../../actions/updateProgress.js'
 class Game extends React.Component {
   constructor(props) {
     super(props);
-
-    this.getKey = this.getKey.bind(this);
   }
 
   componentDidMount() {
@@ -22,14 +21,24 @@ class Game extends React.Component {
       .catch(err => console.error(err, 'unable to get prompt'));
 
     this.props.getKeyFn(this.getKey);
+
+    this.props.socket.on('progress', ({ progress, username }) => {
+      console.log(progress, username);
+    });
   }
 
-  getKey(e) {
+  getKey = (e) => {
     if (e.key === this.props.prompt[this.props.currentLetter]) {
       let updatedProgress = (this.props.currentLetter + 1) / this.props.prompt.length;
       this.props.getCurrentLetter(this.props.currentLetter + 1);
       this.props.updateProgress(updatedProgress);
     }
+
+    this.props.socket.emit('progress', {
+      progress: this.props.progress,
+      username: this.props.username
+    });
+
     if (this.props.currentLetter === this.props.prompt.length) {
       console.log('done');
       // maybe emit winner here
@@ -86,7 +95,8 @@ const mapStateToProps = state => {
   return {
     prompt: state.prompt,
     currentLetter: state.currentLetter,
-    progress: state.progress
+    progress: state.progress,
+    username: state.username
   }
 }
 

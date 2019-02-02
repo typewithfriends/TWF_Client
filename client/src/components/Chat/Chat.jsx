@@ -4,16 +4,15 @@ import { connect } from 'react-redux';
 class Chat extends React.Component {
   constructor(props) {
     super(props);
-
-    this.onMessageType = this.onMessageType.bind(this);
   }
 
   componentDidMount() {
     let feedback = document.getElementById('feedback');
     let output = document.getElementById('output');
-    this.props.socket.on('chat', data => {
+
+    this.props.socket.on('chat', ({ handle, message }) => {
       feedback.innerHTML = '';
-      output.innerHTML += '<p><strong>' + data.handle + ': </strong>' + data.message + '</p>';
+      output.innerHTML += '<p><strong>' + handle + ': </strong>' + message + '</p>';
     });
 
     this.props.socket.on('typing', data => {
@@ -21,7 +20,7 @@ class Chat extends React.Component {
     });
   }
 
-  onMessageType(e) {
+  onMessageType = (e) => {
     let handle = this.props.username;
     if (e.key == 'Enter') {
       let message = e.target.value;
