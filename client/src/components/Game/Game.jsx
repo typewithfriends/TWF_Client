@@ -1,3 +1,4 @@
+import './mainapp.css';
 import React from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
@@ -13,13 +14,10 @@ class Game extends React.Component {
   componentDidMount() {
     axios.get('/api/prompt')
       .then(({ data }) => {
+        data = data.quotes[0].quote;
         this.props.getPrompt(data);
-        // check this
       })
       .catch(err => console.error(err, 'unable to get prompt'));
-      
-    let myPrompt = 'hello tommy liao' // this needs to listen from the socket
-    this.props.getPrompt(myPrompt);
 
     this.props.getKeyFn(this.getKey);
   }
@@ -38,13 +36,50 @@ class Game extends React.Component {
 
   render() {
     return (
-      <div onClick={this.props.getGameFocus} className="flex-col space-between">
+      <div onClick={this.props.getGameFocus} className="game">
         <div id="progress" className="progress"></div>
-        <div id="text" className="text">{this.props.prompt}</div>
+        <div className="typingbox">
+          <div className="prompt" dangerouslySetInnerHTML={{__html: 
+          this.props.prompt.split('')
+          .filter(e => e !== '\\')
+          .map(e => {
+            if (e === ' ') {
+              return e = '&nbsp;';
+            } else {
+              return e;
+            }
+          })
+          .map((e, i, a) => {
+            if (!i) {
+              return `<div class="wordcontainer">
+          <span name="${i + 1}" class="letter">&nbsp;${e}</span>
+          `;
+            }
+            if (i === a.length - 1) {
+              return `  <span name="${i + 1}" class="letter">${e}</span>
+          </div>`
+            }
+            if (e === '&nbsp;') {
+              return `</div>
+          <wbr>
+          <div class="wordcontainer">
+            <span name="${i + 1}" class="letter">${e}</span>
+          `;
+            } else {
+              return `  <span name="${i + 1}" class="letter">${e}</span>
+          `;
+            }
+          })
+          .join('')}
+          }>
+          </div>
+        </div>
       </div>
     );
   }
 }
+
+// this.props.prompt
 
 const mapStateToProps = state => {
   console.log(state)
