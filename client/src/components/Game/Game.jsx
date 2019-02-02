@@ -93,3 +93,5 @@ export default connect(mapStateToProps, {
   getCurrentLetter,
   updateProgress
 })(Game);
+
+// 
