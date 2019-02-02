@@ -34,6 +34,7 @@ class Game extends React.Component {
     }
   }
 
+  
   render() {
     return (
       <div onClick={this.props.getGameFocus} className="game">
