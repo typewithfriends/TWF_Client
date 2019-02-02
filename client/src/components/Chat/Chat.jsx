@@ -8,6 +8,7 @@
       this.onMessageType = this.onMessageType.bind(this);
     }
 
+<<<<<<< HEAD
     componentDidMount() {
       let feedback = document.getElementById('feedback');
       let output = document.getElementById('output');
@@ -15,6 +16,20 @@
         feedback.innerHTML = '';
         output.innerHTML += '<p><strong>' + data.handle + ': </strong>' + data.message + '</p>';
       });
+=======
+  componentDidMount() {
+    let feedback = document.getElementById('feedback');
+    let output = document.getElementById('output');
+    this.props.socket.on('chat', ({ handle, message}) => {
+      feedback.innerHTML = '';
+      output.innerHTML += '<p><strong>' + handle + ': </strong>' + message + '</p>';
+    });
+
+    this.props.socket.on('typing', data => {
+      feedback.innerHTML = '<p><em>' + data + ' is typing...</em></p>';
+    });
+  }
+>>>>>>> Updates bugs
 
       this.props.socket.on('typing', data => {
         feedback.innerHTML = '<p><em>' + data + ' is typing...</em></p>';
@@ -37,6 +52,7 @@
       }
     }
 
+<<<<<<< HEAD
     render() {
       // 
       return (
@@ -46,6 +62,16 @@
           <div>
             <input onKeyDown={this.onMessageType} placeholder="don't be anti-social..."></input>
           </div>
+=======
+  render() {
+    // 
+    return (
+      <div onClick={this.props.getChatFocus}>
+        <div id="output" className="chatbox"></div>
+          <div id="feedback"></div>
+        <div>
+          <input onKeyDown={this.onMessageType} placeholder="don't be anti-social..."></input>
+>>>>>>> Updates bugs
         </div>
       );
     }

@@ -1,8 +1,18 @@
+<<<<<<< HEAD
   import './mainapp.css';
   import React from 'react';
   import { connect } from 'react-redux';
   import axios from 'axios';
   import { getPrompt, getCurrentLetter, updateProgress } from '../../actions/index.js';
+=======
+import React from 'react';
+import { connect } from 'react-redux';
+import axios from 'axios';
+
+import { getPrompt } from '../../actions/getPrompt.js';
+import { getCurrentLetter } from '../../actions/getCurrentLetter.js';
+import { updateProgress } from '../../actions/updateProgress.js';
+>>>>>>> Updates bugs
 
   class Game extends React.Component {
     constructor(props) {
@@ -34,6 +44,11 @@
       }
     }
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+  
+>>>>>>> Updates bugs
     render() {
       return (
         <div onClick={this.props.getGameFocus} className="game">
@@ -77,6 +92,27 @@
         </div>
       );
     }
+<<<<<<< HEAD
+=======
+=======
+  render() {
+    return (
+      <div onClick={this.props.getGameFocus} className="flex-col space-between">
+        <div id="progress" className="progress"></div>
+        <div id="text" className="text">{this.props.prompt}</div>
+      </div>
+    );
+  }
+>>>>>>> Updates bugs
+}
+
+const mapStateToProps = state => {
+  console.log(state)
+  return {
+    prompt: state.prompt,
+    currentLetter: state.currentLetter,
+    progress: state.progress
+>>>>>>> Updates bugs
   }
 
   const mapStateToProps = state => {
