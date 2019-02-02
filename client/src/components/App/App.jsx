@@ -12,6 +12,7 @@
 import Game from '../Game/Game.jsx';
 import Chat from '../Chat/Chat.jsx';
 import Splash from '../Splash/Splash.jsx';
+import TopBar from '../Top Bar/TopBar.jsx';
 import { changeView } from '../../actions/changeView.js';
 >>>>>>> Updates bugs
 
@@ -40,6 +41,7 @@ import { changeView } from '../../actions/changeView.js';
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     getGameFocus() {
       console.log('game focused')
       window.addEventListener("keydown", this.state.getKey);
@@ -58,6 +60,15 @@ import { changeView } from '../../actions/changeView.js';
         <div>
           
           <TopBar />
+=======
+  render() {
+    return (
+      <div>
+        {/* <TopBar /> */}
+        {
+          this.props.view === 'splash' ?
+          <Splash /> :
+>>>>>>> Testing
           <div className="mainapp">
             <Game
               getKeyFn={this.getKeyFn}
@@ -68,33 +79,19 @@ import { changeView } from '../../actions/changeView.js';
               getChatFocus={this.getChatFocus}
               socket={this.state.socket}
             />
-=======
-  render() {
-    return (
-      <div>
-        <div className="flex-col">
-          <h1>Type with Friends</h1>
-          <div>
-            {
-              this.props.view === 'splash' ? <Splash /> : 
-              <div className="flex-row space-around">
-                <Game
-                  getKeyFn={this.getKeyFn}
-                  getGameFocus={this.getGameFocus}
-                  socket={this.state.socket}
-                />
-                <Chat
-                  getChatFocus={this.getChatFocus}
-                  socket={this.state.socket}
-                />
-              </div>
-            }
->>>>>>> Updates bugs
           </div>
+<<<<<<< HEAD
         </div>
       );
     }
   }
+=======
+        }
+      </div>
+    );
+  }
+}
+>>>>>>> Testing
 
   const mapStateToProps = state => {
     return {
