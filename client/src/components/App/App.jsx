@@ -44,7 +44,7 @@ class App extends React.Component {
         {/* <TopBar /> */}
         {
           this.props.view === 'splash' ?
-          <Splash /> :
+          <Splash socket={this.state.socket} /> :
           <div className="mainapp">
             <Game
               getKeyFn={this.getKeyFn}
