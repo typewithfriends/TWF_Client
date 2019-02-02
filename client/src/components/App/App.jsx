@@ -44,25 +44,25 @@ class App extends React.Component {
 
 
 
-  render() {
-    return (
-      <div>
-        
-        <TopBar />
-        <div className="mainapp">
-          <Game
-            getKeyFn={this.getKeyFn}
-            getGameFocus={this.getGameFocus}
-            socket={this.state.socket}
-          />
-          <Chat
-            getChatFocus={this.getChatFocus}
-            socket={this.state.socket}
-          />
+    render() {
+      return (
+        <div>
+          
+          <TopBar />
+          <div className="mainapp">
+            <Game
+              getKeyFn={this.getKeyFn}
+              getGameFocus={this.getGameFocus}
+              socket={this.state.socket}
+            />
+            <Chat
+              getChatFocus={this.getChatFocus}
+              socket={this.state.socket}
+            />
+          </div>
         </div>
-      </div>
-    );
-  }
+      );
+    }
 }
 
 const mapStateToProps = state => {
