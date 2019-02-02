@@ -59,7 +59,7 @@
   top: -18px;
   left: 2.5%;
   /* width: 618px; */
-  transition: width 1s ease-in-out;
+  transition: .3s ease-in-out;
 }
 
 .typingbox {
@@ -95,4 +95,8 @@
 .letter.current {
   border-right: 1px solid black;
   text-decoration: underline;
+}
+
+body {
+  overflow: hidden;
 }

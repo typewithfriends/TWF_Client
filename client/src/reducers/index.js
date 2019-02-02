@@ -5,6 +5,7 @@ import { getUsernameReducer } from './getUsernameReducer.js';
 import { getPromptReducer } from './getPromptReducer.js';
 import { getCurrentLetterReducer } from './getCurrentLetterReducer.js';
 import { updateProgessReducer } from './updateProgressReducer.js';
+import { getUsersListStatsReducer } from './getUsersListStatsReducer.js';
 
 
 export default combineReducers({
@@ -12,5 +13,6 @@ export default combineReducers({
   username: getUsernameReducer,
   prompt: getPromptReducer,
   currentLetter: getCurrentLetterReducer,
-  progress: updateProgessReducer
+  progress: updateProgessReducer,
+  usersListStats: getUsersListStatsReducer
 });
