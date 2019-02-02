@@ -1,48 +1,46 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import io from 'socket.io-client';
+  import React from 'react';
+  import { connect } from 'react-redux';
+  import io from 'socket.io-client';
 
-import TopBar from '../Top Bar/TopBar.jsx';
-import Game from '../Game/Game.jsx';
-import Chat from '../Chat/Chat.jsx';
-import Splash from '../Splash/Splash.jsx';
-import { changeView } from '../../actions/index.js';
+  import TopBar from '../Top Bar/TopBar.jsx';
+  import Game from '../Game/Game.jsx';
+  import Chat from '../Chat/Chat.jsx';
+  import Splash from '../Splash/Splash.jsx';
+  import { changeView } from '../../actions/index.js';
 
-const port = 3000;
-const socket = io(`http://localhost:${port}`);
+  const port = 3000;
+  const socket = io(`http://localhost:${port}`);
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      getKey: null,
-      socket: socket
+  class App extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = {
+        getKey: null,
+        socket: socket
+      }
+
+      this.getKeyFn = this.getKeyFn.bind(this);
+      this.getGameFocus = this.getGameFocus.bind(this);
+      this.getChatFocus = this.getChatFocus.bind(this);
     }
 
-    this.getKeyFn = this.getKeyFn.bind(this);
-    this.getGameFocus = this.getGameFocus.bind(this);
-    this.getChatFocus = this.getChatFocus.bind(this);
-  }
+    componentDidMount() {
+      this.state.socket.emit('joinRoom', 'lobby');
+    }
 
-  componentDidMount() {
-    this.state.socket.emit('joinRoom', 'lobby');
-  }
+    getKeyFn(fn) {
+      this.setState({ getKey: fn });
+    }
 
-  getKeyFn(fn) {
-    this.setState({ getKey: fn });
-  }
+    getGameFocus() {
+      console.log('game focused')
+      window.addEventListener("keydown", this.state.getKey);
+    }
 
-  getGameFocus() {
-    console.log('game focused')
-    window.addEventListener("keydown", this.state.getKey);
-  }
-
-  getChatFocus() {
-    console.log('chat focused')
-    window.removeEventListener('keydown', this.state.getKey);
-  }
-
-
+    getChatFocus() {
+      console.log('chat focused')
+      window.removeEventListener('keydown', this.state.getKey);
+    }
 
     render() {
       return (
@@ -63,14 +61,14 @@ class App extends React.Component {
         </div>
       );
     }
-}
-
-const mapStateToProps = state => {
-  return {
-    view: state.view
   }
-}
 
-export default connect(mapStateToProps, {
-  changeView
-})(App);
+  const mapStateToProps = state => {
+    return {
+      view: state.view
+    }
+  }
+
+  export default connect(mapStateToProps, {
+    changeView
+  })(App);
