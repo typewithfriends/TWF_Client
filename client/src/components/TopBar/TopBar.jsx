@@ -5,9 +5,9 @@ export default class TopBar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-
     }
   }
+
   render() {
     return (
       <div className="topbar">
@@ -23,6 +23,6 @@ export default class TopBar extends React.Component {
         {/* conditionally rendered based on login status */}
       </div>
     </div>
-    )
+    );
   }
 }

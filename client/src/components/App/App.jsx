@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import io from 'socket.io-client';
 
-import TopBar from '../Top Bar/TopBar.jsx';
+import TopBar from '../TopBar/TopBar.jsx';
 import Game from '../Game/Game.jsx';
 import Chat from '../Chat/Chat.jsx';
 import Splash from '../Splash/Splash.jsx';
@@ -18,26 +18,22 @@ class App extends React.Component {
       getKey: null,
       socket: socket
     }
-
-    this.getKeyFn = this.getKeyFn.bind(this);
-    this.getGameFocus = this.getGameFocus.bind(this);
-    this.getChatFocus = this.getChatFocus.bind(this);
   }
 
   componentDidMount() {
     this.state.socket.emit('joinRoom', 'lobby');
   }
 
-  getKeyFn(fn) {
+  getKeyFn = (fn) => {
     this.setState({ getKey: fn });
   }
 
-  getGameFocus() {
+  getGameFocus = () => {
     console.log('game focused')
     window.addEventListener("keydown", this.state.getKey);
   }
 
-  getChatFocus() {
+  getChatFocus = () => {
     console.log('chat focused')
     window.removeEventListener('keydown', this.state.getKey);
   }
@@ -65,7 +61,6 @@ class App extends React.Component {
     );
   }
 }
-
 
 const mapStateToProps = state => {
   return {

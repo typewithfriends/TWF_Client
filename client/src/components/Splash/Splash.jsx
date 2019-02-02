@@ -7,16 +7,13 @@ import { getUsername } from '../../actions/getUsername.js';
 class Splash extends React.Component {
   constructor(props) {
     super(props);
-
-    this.getUsername = this.getUsername.bind(this);
-    this.enterUsername = this.enterUsername.bind(this);
   }
 
-  getUsername(e) {
+  getUsername = (e) => {
     this.props.getUsername(e.target.value);
   }
 
-  enterUsername(e) {
+  enterUsername = (e) => {
     this.props.changeView('game');
   }
 
