@@ -44,27 +44,6 @@ class App extends React.Component {
 
   render() {
     return (
-      // <div>
-      //   <div className="flex-col">
-      //     <h1>Type with Friends</h1>
-      //     <div>
-      //       {
-      //         this.props.view === 'splash' ? <Splash /> : 
-      //         <div className="flex-row space-around">
-      //           <Game
-      //             getKeyFn={this.getKeyFn}
-      //             getGameFocus={this.getGameFocus}
-      //             socket={this.state.socket}
-      //           />
-      //           <Chat
-      //             getChatFocus={this.getChatFocus}
-      //             socket={this.state.socket}
-      //           />
-      //         </div>
-      //       }
-      //     </div>
-      //   </div>
-      // </div>
       <div>
         <TopBar />
         <div className="mainapp">

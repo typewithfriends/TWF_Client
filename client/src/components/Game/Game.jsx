@@ -79,8 +79,6 @@ class Game extends React.Component {
   }
 }
 
-// this.props.prompt
-
 const mapStateToProps = state => {
   console.log(state)
   return {
