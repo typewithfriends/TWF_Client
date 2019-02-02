@@ -1,7 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { changeView, getUsername } from '../../actions/index.js';
+import { changeView } from '../../actions/changeView.js';
+import { getUsername } from '../../actions/getUsername.js';
 
 class Splash extends React.Component {
   constructor(props) {
@@ -40,5 +41,3 @@ export default connect(mapStateToProps, {
   changeView,
   getUsername
 })(Splash);
-
-// 
