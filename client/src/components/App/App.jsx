@@ -7,6 +7,7 @@ import Game from '../Game/Game.jsx';
 import Chat from '../Chat/Chat.jsx';
 import Splash from '../Splash/Splash.jsx';
 import { changeView } from '../../actions/changeView.js';
+import { getUsersListStats } from '../../actions/getUsersListStats.js';
 
 const port = 3000;
 const socket = io(`http://localhost:${port}`);
@@ -22,21 +23,25 @@ class App extends React.Component {
 
   componentDidMount() {
     this.state.socket.emit('joinRoom', 'lobby');
+
+    this.state.socket.on('progress', (stats) => {
+      this.props.getUsersListStats(stats);
+    });
   }
 
-  getKeyFn = (fn) => {
-    this.setState({ getKey: fn });
-  }
+  // getKeyFn = (fn) => {
+  //   this.setState({ getKey: fn });
+  // }
 
-  getGameFocus = () => {
-    console.log('game focused')
-    window.addEventListener("keydown", this.state.getKey);
-  }
+  // getGameFocus = () => {
+  //   console.log('game focused')
+  //   window.addEventListener("keydown", this.state.getKey);
+  // }
 
-  getChatFocus = () => {
-    console.log('chat focused')
-    window.removeEventListener('keydown', this.state.getKey);
-  }
+  // getChatFocus = () => {
+  //   console.log('chat focused')
+  //   window.removeEventListener('keydown', this.state.getKey);
+  // }
     
   render() {
     return (
@@ -69,5 +74,6 @@ const mapStateToProps = state => {
 }
 
 export default connect(mapStateToProps, {
-  changeView
+  changeView,
+  getUsersListStats
 })(App);
