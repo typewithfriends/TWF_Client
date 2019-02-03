@@ -11,7 +11,7 @@ class Progress extends React.Component {
       <div className="progressbarcontainer">
         <div className="progressuserinfo">{this.props.user}</div>
         <div className="progressbar"></div>
-        <div style={{'width': `${this.props.progress * 618}px`}} className="progressbarprogress"></div>
+        <div style={{'width': `${this.props.progress * 618 + 2}px`}} className="progressbarprogress"></div>
       </div>
     );
   }

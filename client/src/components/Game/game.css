@@ -1,3 +1,6 @@
+input:focus {
+  outline: none;
+}
 .mainapp {
   position: relative;
   display: flex;
@@ -86,6 +89,7 @@
 }
 .letter {
   font-size: 20px;
+  /* width: 10px; */
 }
 
 .letter.done {
@@ -94,7 +98,8 @@
 
 .letter.current {
   border-right: 1px solid black;
-  text-decoration: underline;
+  box-sizing: border-box;
+  /* text-decoration: underline; */
 }
 
 body {
