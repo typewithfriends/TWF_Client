@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import Word from './Word.jsx';
+
 class TypingBox extends React.Component {
   constructor(props) {
     super(props);
@@ -9,42 +11,26 @@ class TypingBox extends React.Component {
     };
   }
 
+  // componentDidUpdate() {
+  //   if (this.props.prompt.length >= this.props.currentLetter) {
+  //     console.log(this.props.currentLetter);
+  //     setInterval(() => {
+  //       document.getElementsByName(this.props.currentLetter)[0].classList.toggle('current');
+  //     }, 400);
+  //   }
+  // }
+
   render() {
+    const prompt = this.props.prompt
+      .split('')
+      .filter(e => e !== '\\' && e !== '[' && e !== ']')
+      .join('')
+      .split(' ');
+
     return (
-      <div className="prompt" dangerouslySetInnerHTML={{__html: 
-        this.props.prompt.split('')
-        .filter(e => e !== '\\' || e !== '[' || e !== ']')
-        .map(e => {
-          if (e === ' ') {
-            return e = '&nbsp;';
-          } else {
-            return e;
-          }
-        })
-        .map((e, i, a) => {
-          if (!i) {
-            return `<div class="wordcontainer">
-        <span name="${i + 1}" key="${i + 1}" class="letter">&nbsp;${e}</span>
-        `;
-          }
-          if (i === a.length - 1) {
-            return `  <span name="${i + 1}" key="${i + 1}" class="letter">${e}</span>
-        </div>`
-          }
-          if (e === '&nbsp;') {
-            return `</div>
-        <wbr>
-        <div class="wordcontainer">
-          <span name="${i + 1}" key="${i + 1}" class="letter">${e}</span>
-        `;
-          } else {
-            return `  <span name="${i + 1}" key="${i + 1}" class="letter">${e}</span>
-        `;
-          }
-        })
-        .join('')}
-        }>
-        </div>
+      <div className="prompt">
+        {prompt.map((word, i) => <Word key={i} wordNum={i} splitWord={word.split('')}/>)}
+      </div>
     )
   }
 }

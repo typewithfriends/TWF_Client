@@ -26,7 +26,7 @@ class Game extends React.Component {
     })
     
     this.props.socket.on('progress', (stats) => {
-      console.log(stats);
+      // console.log(stats);
       this.props.getUsersListStats(stats);
     });
   }
@@ -66,7 +66,7 @@ class Game extends React.Component {
 }
 
 const mapStateToProps = state => {
-  console.log(state)
+  // console.log(state)
   return {
     prompt: state.prompt,
     currentLetter: state.currentLetter,

@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import './chat.css';
 
 class Chat extends React.Component {
   constructor(props) {
@@ -13,11 +14,13 @@ class Chat extends React.Component {
     this.props.socket.on('chat', ({ handle, message }) => {
       feedback.innerHTML = '';
       output.innerHTML += '<p><strong>' + handle + ': </strong>' + message + '</p>';
+      output.scrollTop = output.scrollHeight;
     });
 
     this.props.socket.on('typing', data => {
       feedback.innerHTML = '<p><em>' + data + ' is typing...</em></p>';
     });
+  
   }
 
   onMessageType = (e) => {
@@ -42,7 +45,7 @@ class Chat extends React.Component {
         <div id="output" className="chatbox"></div>
           <div id="feedback"></div>
         <div>
-          <input onKeyDown={this.onMessageType} placeholder="don't be anti-social..."></input>
+          <input className="chatinput" onKeyDown={this.onMessageType} placeholder=" "></input>
         </div>
       </div>
     );
