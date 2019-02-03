@@ -41,7 +41,7 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        {/* <TopBar /> */}
+        <TopBar />
         {
           this.props.view === 'splash' ?
           <Splash socket={this.state.socket} /> :

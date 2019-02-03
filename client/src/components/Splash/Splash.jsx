@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import './splash.css';
 
 import { changeView } from '../../actions/changeView.js';
 import { getUsername } from '../../actions/getUsername.js';
@@ -24,7 +25,7 @@ class Splash extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="splashscreen">
         <p>What is your name?</p>
         <input onChange={this.getUsername} className="username"></input>
         <button onClick={this.enterUsername}>Let's Play!</button>
