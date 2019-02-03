@@ -3,11 +3,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import Progress from '../Progress/Progress.jsx';
-<<<<<<< HEAD
 import TypingBox from '../TypingBox/TypingBox.jsx';
-=======
-import { changeView } from '../../actions/changeView.js';
->>>>>>> Adds game logic socket code
+import { changeView } from '../../actions/changeView.js'
 import { getPrompt } from '../../actions/getPrompt.js'
 import { getCurrentLetter } from '../../actions/getCurrentLetter.js'
 import { updateProgress } from '../../actions/updateProgress.js'
@@ -16,21 +13,24 @@ import { getUsersListStats } from '../../actions/getUsersListStats.js';
 class Game extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      joined: false,
+      gotPrompt: false,
+      play: false
+    }
   }
 
   componentDidMount() {
     // this.props.getKeyFn(this.getKey);
 
-    this.props.socket.on('prompt', prompt => {
-      prompt = prompt.quotes[0].quote;
-      this.props.getPrompt(prompt);
-    })
-<<<<<<< HEAD
-    
-    this.props.socket.on('progress', (stats) => {
-      // console.log(stats);
-      this.props.getUsersListStats(stats);
-=======
+  
+    if (this.state.gotPrompt === false) {
+      this.props.socket.on('prompt', prompt => {
+        prompt = prompt.quotes[0].quote;
+        this.props.getPrompt(prompt);
+      })
+    }
+    this.setState({ gotPrompt: true });
 
     this.props.socket.on('gameStartedAll', () => {
       setTimeout(this.startGame, 5000);
@@ -40,23 +40,33 @@ class Game extends React.Component {
       console.log(username, 'won the game!');
       window.removeEventListener('keydown', this.state.getKey);
       this.props.changeView('gameRoom');
+      this.props.getUsersListStats([]);
+      this.setState({ joined: false });
+      this.setState({ play: true });
     })
   }
 
   onJoinGameClick = (e) => {
-    this.props.socket.emit('joinGame', this.props.username);
-    this.props.changeView('inGame');
+    if (this.state.joined === false) {
+      this.props.socket.emit('joinGame', this.props.username);
+      this.props.changeView('inGame');
+  
+      this.props.socket.emit('progress', {
+        username: this.props.username,
+        progress: this.props.progress
+      });
 
-    this.props.socket.emit('progress', {
-      username: this.props.username,
-      progress: this.props.progress
->>>>>>> Adds game logic socket code
-    });
-    console.log(this.props.usersListStats.length);
+      this.props.socket.on('progress', (stats) => {
+        this.props.getUsersListStats(stats);
+      });
 
-    if (this.props.usersListStats.length + 1 === 2) { // change this num to 4; also figure out async
-      this.props.socket.emit('gameStart');
+      console.log('length', this.props.usersListStats);
+      if (this.props.usersListStats.length + 1 === 2) { // change this num to 4; also figure out async
+        this.props.socket.emit('gameStart');
+        this.setState({ play: false})
+      }
     }
+    this.setState({ joined: true });
   }
 
   startGame = () => {
@@ -73,15 +83,16 @@ class Game extends React.Component {
       let updatedProgress = (this.props.currentLetter + 1) / this.props.prompt.length;
       this.props.getCurrentLetter(this.props.currentLetter + 1);
       this.props.updateProgress(updatedProgress);
-    }
 
+    }
     this.props.socket.emit('progress', {
       username: this.props.username,
       progress: this.props.progress
     });
-
+    
     if (this.props.currentLetter === this.props.prompt.length) {
       this.props.socket.emit('gameOver', this.props.username);
+      console.log('done');
     }
   }
 
@@ -95,47 +106,12 @@ class Game extends React.Component {
             return <Progress key={i} user={stat.username} progress={stat.progress} />
           })}
         </div>
-<<<<<<< HEAD
         <div className="typingbox">
+          {this.props.usersListStats.length < 2 && this.state.play === false ? <button onClick={this.onJoinGameClick}>Join Game!</button> : null}
           <TypingBox />
-=======
-        <div className="typingbox"> 
-          {this.props.usersListStats.length < 2 ? <button onClick={this.onJoinGameClick}>Join Game!</button> : null}
-          <div className="prompt" dangerouslySetInnerHTML={{__html: 
-          this.props.prompt.split('')
-          .filter(e => e !== '\\' || e !== '[' || e !== ']')
-          .map(e => {
-            if (e === ' ') {
-              return e = '&nbsp;';
-            } else {
-              return e;
-            }
-          })
-          .map((e, i, a) => {
-            if (!i) {
-              return `<div class="wordcontainer">
-          <span name="${i + 1}" key="${i + 1}" class="letter">&nbsp;${e}</span>
-          `;
-            }
-            if (i === a.length - 1) {
-              return `  <span name="${i + 1}" key="${i + 1}" class="letter">${e}</span>
-          </div>`
-            }
-            if (e === '&nbsp;') {
-              return `</div>
-          <wbr>
-          <div class="wordcontainer">
-            <span name="${i + 1}" key="${i + 1}" class="letter">${e}</span>
-          `;
-            } else {
-              return `  <span name="${i + 1}" key="${i + 1}" class="letter">${e}</span>
-          `;
-            }
-          })
-          .join('')}
-          }>
-          </div>
->>>>>>> Adds game logic socket code
+        </div>
+        <div>
+        {this.props.usersListStats.length < 2 && this.state.play === true ? <button onClick={this.onJoinGameClick}>Play Again!</button> : null}
         </div>
       </div>
     );
@@ -143,7 +119,7 @@ class Game extends React.Component {
 }
 
 const mapStateToProps = state => {
-  // console.log(state)
+  console.log(state)
   return {
     view: state.view,
     prompt: state.prompt,
