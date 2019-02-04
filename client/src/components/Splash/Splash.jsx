@@ -15,12 +15,7 @@ class Splash extends React.Component {
   }
 
   enterUsername = (e) => {
-    this.props.changeView('game');
-
-    this.props.socket.emit('progress', {
-      username: this.props.username,
-      progress: this.props.progress
-    });
+    this.props.changeView('gameRoom');
   }
 
   render() {
@@ -34,14 +29,8 @@ class Splash extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    username: state.username,
-    progress: state.progress
-  }
-}
 
-export default connect(mapStateToProps, {
+export default connect(null, {
   changeView,
   getUsername
 })(Splash);

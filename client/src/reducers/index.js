@@ -6,6 +6,7 @@ import { getPromptReducer } from './getPromptReducer.js';
 import { getCurrentLetterReducer } from './getCurrentLetterReducer.js';
 import { updateProgessReducer } from './updateProgressReducer.js';
 import { getUsersListStatsReducer } from './getUsersListStatsReducer.js';
+import { checkGameStatusReducer } from './checkGameStatusReducer.js';
 
 
 export default combineReducers({
@@ -14,5 +15,6 @@ export default combineReducers({
   prompt: getPromptReducer,
   currentLetter: getCurrentLetterReducer,
   progress: updateProgessReducer,
-  usersListStats: getUsersListStatsReducer
+  usersListStats: getUsersListStatsReducer,
+  gameStatus: checkGameStatusReducer
 });
