@@ -65,7 +65,7 @@ class Game extends React.Component {
 
       // FIX THIS
       // starts game when num of players reached
-      if (this.props.usersListStats.length + 1 === 2) { // change this num to 4; also figure out async
+      if (this.props.usersListStats.length + 1 === 4) { // change this num to 4
         this.props.socket.emit('gameStart');
       }
       
