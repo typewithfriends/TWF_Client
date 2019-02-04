@@ -89,17 +89,19 @@ input:focus {
 }
 .letter {
   font-size: 20px;
-  /* width: 10px; */
+  height: 20px;
 }
 
 .letter.done {
   font-weight: bold;
 }
 
-.letter.current {
-  border-right: 1px solid black;
-  box-sizing: border-box;
-  /* text-decoration: underline; */
+.cursor.shown {
+  position: relative;
+  height: 18px;
+  width: 1px;
+  background-color: black;
+  top: -20px;
 }
 
 body {

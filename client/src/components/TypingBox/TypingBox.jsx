@@ -6,30 +6,46 @@ import Word from './Word.jsx';
 class TypingBox extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-
-    };
   }
 
-  // componentDidUpdate() {
-  //   if (this.props.prompt.length >= this.props.currentLetter) {
-  //     console.log(this.props.currentLetter);
-  //     setInterval(() => {
-  //       document.getElementsByName(this.props.currentLetter)[0].classList.toggle('current');
-  //     }, 400);
-  //   }
-  // }
+  componentDidUpdate(p) {
+    if (p.currentLetter !== this.props.currentLetter) {
+      // DON'T
+      document.querySelectorAll('.letter').forEach(el => el.children[0].classList.remove('shown'));
+      // QUESTION THIS
+      for (let i = 0; i < 1000; i += 1) {
+        window.clearInterval(i);
+      }
+      this.cursor();
+      document.querySelectorAll('.letter')[this.props.currentLetter].classList.add('done');
+    }
+  }
+
+  cursor() {
+    // or will return undefined
+    if (this.props.currentLetter + 2 < this.props.prompt.length) {
+      document.querySelectorAll('.letter')[this.props.currentLetter + 1].children[0].classList.toggle('shown');
+      window.setInterval(() => {
+        document.querySelectorAll('.letter')[this.props.currentLetter + 1].children[0].classList.toggle('shown');
+      }, 400);
+    }
+  }
+
 
   render() {
     const prompt = this.props.prompt
       .split('')
-      .filter(e => e !== '\\' && e !== '[' && e !== ']')
+      .filter(e => e !== '\\')
       .join('')
       .split(' ');
 
     return (
       <div className="prompt">
-        {prompt.map((word, i) => <Word key={i} wordNum={i} splitWord={word.split('')}/>)}
+        {prompt.map((word, i) => 
+        <Word 
+          key={i} 
+          splitWord={word.split('')}
+        />)}
       </div>
     )
   }
