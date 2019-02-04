@@ -8,6 +8,8 @@ import Chat from '../Chat/Chat.jsx';
 import Splash from '../Splash/Splash.jsx';
 import { changeView } from '../../actions/changeView.js';
 import { getUsersListStats } from '../../actions/getUsersListStats.js';
+import { checkGameStatus } from '../../actions/checkGameStatus.js';
+import { getPrompt } from '../../actions/getPrompt.js';
 
 const port = 3000;
 const socket = io(`http://localhost:${port}`);
@@ -16,32 +18,27 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      getKey: null,
       socket: socket
     }
   }
 
   componentDidMount() {
-    this.state.socket.emit('joinRoom', 'lobby');
+    this.state.socket.emit('joinRoom', 'lobby'); 
 
+    // gets game status and prompt for new joiners.
+    this.state.socket.on('welcome', startInfo => {
+      const { gameInProgress, prompt, players } = startInfo;
+      this.props.checkGameStatus(gameInProgress);
+      this.props.getPrompt(prompt);
+      this.props.getUsersListStats(players);
+    })
+
+    // shows progress of players in game.
+    // needed to remove 'let's play' button for new joiners.
     this.state.socket.on('progress', (stats) => {
       this.props.getUsersListStats(stats);
     });
   }
-
-  // getKeyFn = (fn) => {
-  //   this.setState({ getKey: fn });
-  // }
-
-  // getGameFocus = () => {
-  //   console.log('game focused')
-  //   window.addEventListener("keydown", this.state.getKey);
-  // }
-
-  // getChatFocus = () => {
-  //   console.log('chat focused')
-  //   window.removeEventListener('keydown', this.state.getKey);
-  // }
     
   render() {
     return (
@@ -52,12 +49,9 @@ class App extends React.Component {
           <Splash socket={this.state.socket} /> :
           <div className="mainapp">
             <Game
-              getKeyFn={this.getKeyFn}
-              getGameFocus={this.getGameFocus}
               socket={this.state.socket}
             />
             <Chat
-              getChatFocus={this.getChatFocus}
               socket={this.state.socket}
             />
           </div>
@@ -69,11 +63,14 @@ class App extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    view: state.view
+    view: state.view,
+    gameStatus: state.gameStatus
   }
 }
 
 export default connect(mapStateToProps, {
   changeView,
-  getUsersListStats
+  getUsersListStats,
+  checkGameStatus,
+  getPrompt
 })(App);
