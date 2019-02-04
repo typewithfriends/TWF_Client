@@ -45,7 +45,7 @@ class Chat extends React.Component {
         <div id="output" className="chatbox"></div>
           <div id="feedback"></div>
         <div>
-          <input className="chatinput" onKeyDown={this.onMessageType} placeholder=" "></input>
+          <input className="chatinput" onKeyDown={this.onMessageType} placeholder="don't be anti-social..."></input>
         </div>
       </div>
     );
