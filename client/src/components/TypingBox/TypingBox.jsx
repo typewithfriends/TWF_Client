@@ -17,9 +17,7 @@ class TypingBox extends React.Component {
         window.clearInterval(i);
       }
       this.cursor();
-      for (let i = 0; i <= this.props.currentLetter; i += 1) {
-        document.querySelectorAll('.letter')[i].classList.add('done');
-      }
+      document.querySelectorAll('.letter')[this.props.currentLetter].classList.add('done');
     }
   }
 
