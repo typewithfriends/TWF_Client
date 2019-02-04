@@ -7,42 +7,32 @@
   height: auto;
 }
 
-.promptcontainer {
+.prompt {
   position: relative;
   width: 95%;
   left: 2.5%;
   top: 5px;
   margin-bottom: 10px;
+  display: flex;
+  flex-wrap: wrap;
 }
 
-.prompt {
-  display: inline-block;
+.wordcontainer {
+  display: flex;
 }
-
-.type {
+.letter {
   font-size: 20px;
+  height: 20px;
 }
 
-.type.done {
+.letter.done {
   font-weight: bold;
 }
 
-.type.cursor {
-  position: absolute;
-  margin-left: -2px;
-  font-size: 23px;
-  margin-top: -2px;
-  animation: .7s linear infinite blink;
-}
-
-@keyframes blink {
-  0% {
-      visibility: hidden;
-  }
-  50% {
-      visibility: hidden;
-  }
-  100% {
-      visibility: visible;
-  }
+.cursor.shown {
+  position: relative;
+  height: 18px;
+  width: 1px;
+  background-color: black;
+  top: -20px;
 }
