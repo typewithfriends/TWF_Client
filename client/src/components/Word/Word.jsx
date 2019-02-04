@@ -1,4 +1,5 @@
 import React from 'react';
+// import './word.css';
 
 const Word = props => (
   <div className="wordcontainer">

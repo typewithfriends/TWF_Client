@@ -34,7 +34,6 @@ class App extends React.Component {
     })
 
     // shows progress of players in game.
-    // needed to remove 'let's play' button for new joiners.
     this.state.socket.on('progress', (stats) => {
       this.props.getUsersListStats(stats);
     });

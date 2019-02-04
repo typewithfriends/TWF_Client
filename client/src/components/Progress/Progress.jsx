@@ -1,9 +1,5 @@
 import React from 'react';
-<<<<<<< HEAD
-import { connect } from 'react-redux';
 import './progress.css';
-=======
->>>>>>> Refactors game logic to server side
 
 class Progress extends React.Component {
   constructor(props) {

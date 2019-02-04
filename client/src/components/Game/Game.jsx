@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 import Progress from '../Progress/Progress.jsx';
 import TypingBox from '../TypingBox/TypingBox.jsx';
+import Countdown from '../Countdown/Countdown.jsx';
 import { changeView } from '../../actions/changeView.js'
 import { getPrompt } from '../../actions/getPrompt.js'
 import { getCurrentLetter } from '../../actions/getCurrentLetter.js'
@@ -15,11 +16,16 @@ class Game extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      joined: false
+      joined: false,
+      count: 5
     }
   }
 
   componentDidMount() {
+    this.props.socket.on('progress', (stats) => {
+      this.props.getUsersListStats(stats);
+    });
+
     // on emission of gameStart, get back prompt, gameInProgress, and gameStartedAll
     this.props.socket.on('prompt', prompt => {
       this.props.getPrompt(prompt);
@@ -30,22 +36,21 @@ class Game extends React.Component {
     })
 
     this.props.socket.on('gameStartedAll', () => {
-      setTimeout(this.startGame, 5000);
+      // this.startGame();
+      this.countdown();
     });
 
     this.props.socket.on('gameOver', username => {
-      window.removeEventListener('keydown', this.state.getKey);
-      this.props.changeView('gameRoom');
+      // resets state for new game
+      window.removeEventListener('keydown', this.getKey);
       this.props.getPrompt(`${username} won the game!`);
+      this.props.changeView('gameRoom');
       this.props.getUsersListStats([]);
       this.props.updateProgress(0);
       this.props.getCurrentLetter(0);
       this.setState({ joined: false });
     })
   }
-
-
-
 
   onJoinGameClick = (e) => {
     if (this.state.joined === false) {
@@ -63,25 +68,32 @@ class Game extends React.Component {
       if (this.props.usersListStats.length + 1 === 2) { // change this num to 4; also figure out async
         this.props.socket.emit('gameStart');
       }
+      
+      this.setState({ joined: true });
     }
-    this.setState({ joined: true });
   }
 
+  countdown = () => {
+    setTimeout(() => this.setState({ count: 5 }), 0);
+    setTimeout(() => this.setState({ count: 4 }), 1000);
+    setTimeout(() => this.setState({ count: 3 }), 2000);
+    setTimeout(() => this.setState({ count: 2 }), 3000);
+    setTimeout(() => this.setState({ count: 1 }), 4000);
 
-
-
+    setTimeout(() => {
+      this.setState({ count: null });
+      this.startGame();
+    }, 5000);
+  }
 
   startGame = () => {
     if (this.props.view === 'inGame') {
       console.log('game started!');
       window.addEventListener("keydown", this.getKey);
-    } else {
+    } else if (this.props.view === 'gameRoom') {
       console.log('let\'s watch!')
     }
   }
-
-
-
 
   getKey = (e) => {
     if (e.key === this.props.prompt[this.props.currentLetter]) {
@@ -90,12 +102,10 @@ class Game extends React.Component {
       this.props.updateProgress(updatedProgress);
     }
 
-    if (this.props.view === 'inGame') {
-      this.props.socket.emit('progress', {
-        username: this.props.username,
-        progress: this.props.progress
-      });
-    }
+    this.props.socket.emit('progress', {
+      username: this.props.username,
+      progress: this.props.progress
+    });
     
     if (this.props.currentLetter === this.props.prompt.length) {
       this.props.socket.emit('gameOver', this.props.username);
@@ -105,14 +115,14 @@ class Game extends React.Component {
 
   render() {
     return (
-        <div onClick={this.props.getGameFocus} className="game">
+        <div className="game">
         <div id="progress" className="progress">
           {this.props.usersListStats.map((stat, i) => {
             return <Progress key={i} user={stat.username} progress={stat.progress} />
           })}
         </div>
         <div className="typingbox">
-          {this.props.gameStatus === false ? <button onClick={this.onJoinGameClick}>Join Game!</button> : null}
+          {this.props.gameStatus === false ? <button onClick={this.onJoinGameClick}>Join Game!</button> : <Countdown count={this.state.count} />}
           <TypingBox />
         </div>
       </div>
