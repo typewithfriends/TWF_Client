@@ -1,10 +1,11 @@
 import './game.css';
 import React from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import Progress from '../Progress/Progress.jsx';
 import TypingBox from '../TypingBox/TypingBox.jsx';
-import Countdown from '../Countdown/Countdown.jsx';
+import Countdown from './Countdown.jsx';
 import { changeView } from '../../actions/changeView.js'
 import { getPrompt } from '../../actions/getPrompt.js'
 import { getCurrentLetter } from '../../actions/getCurrentLetter.js'
@@ -17,7 +18,10 @@ class Game extends React.Component {
     super(props);
     this.state = {
       joined: false,
-      count: 5
+      count: 5,
+      len: 0,
+      start: 0,
+      end: 0
     }
   }
 
@@ -25,21 +29,23 @@ class Game extends React.Component {
     this.props.socket.on('progress', (stats) => {
       this.props.getUsersListStats(stats);
     });
-
+    
     // on emission of gameStart, get back prompt, gameInProgress, and gameStartedAll
     this.props.socket.on('prompt', prompt => {
       this.props.getPrompt(prompt);
+      const len = this.props.prompt.split(' ').length;
+      this.setState({ len })
     })
-
+    
     this.props.socket.on('gameInProgress', gameInProgress => {
       this.props.checkGameStatus(gameInProgress);
     })
-
+    
     this.props.socket.on('gameStartedAll', () => {
       // this.startGame();
       this.countdown();
     });
-
+    
     this.props.socket.on('gameOver', username => {
       // resets state for new game
       window.removeEventListener('keydown', this.getKey);
@@ -49,6 +55,10 @@ class Game extends React.Component {
       this.props.updateProgress(0);
       this.props.getCurrentLetter(0);
       this.setState({ joined: false });
+      let endTime = new Date().getTime();
+      this.setState({ end: endTime });
+      console.log('len', this.state.len);
+      console.log('time is ', this.state.len / (this.state.end - this.state.start) * 1000, 'words per minute')
     })
   }
 
@@ -87,6 +97,9 @@ class Game extends React.Component {
   }
 
   startGame = () => {
+    let startTime = new Date().getTime();
+    this.setState({ start: startTime });
+
     if (this.props.view === 'inGame') {
       console.log('game started!');
       window.addEventListener("keydown", this.getKey);
@@ -115,7 +128,7 @@ class Game extends React.Component {
 
   render() {
     return (
-        <div className="game">
+      <div className="game">
         <div id="progress" className="progress">
           {this.props.usersListStats.map((stat, i) => {
             return <Progress key={i} user={stat.username} progress={stat.progress} />
@@ -131,7 +144,7 @@ class Game extends React.Component {
 }
 
 const mapStateToProps = state => {
-  console.log(state)
+  console.log('state obj', state)
   return {
     view: state.view,
     prompt: state.prompt,
@@ -139,7 +152,8 @@ const mapStateToProps = state => {
     username: state.username,
     progress: state.progress,
     usersListStats: state.usersListStats,
-    gameStatus: state.gameStatus
+    gameStatus: state.gameStatus,
+    // socket: state.socket
   }
 }
 
@@ -151,3 +165,14 @@ export default connect(mapStateToProps, {
   getUsersListStats,
   checkGameStatus
 })(Game);
+
+Game.propTypes = {
+  view: PropTypes.string.isRequired,
+  prompt: PropTypes.string.isRequired,
+  currentLetter: PropTypes.number.isRequired,
+  username: PropTypes.string.isRequired,
+  progress: PropTypes.number.isRequired,
+  usersListStats: PropTypes.array.isRequired,
+  gameStatus: PropTypes.bool.isRequired,
+  // socket: PropTypes.object.isRequired
+}

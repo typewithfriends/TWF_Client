@@ -1,0 +1,11 @@
+.signupmodal, .loginmodal {
+  /* width: 400px;
+  height: 400px; */
+  /* border: 1px solid black; */
+  position: relative;
+  /* background-color: white; */
+  /* z-index: 1; */
+  right: 0;
+  top: 50px;
+}
+

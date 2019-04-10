@@ -1,5 +1,4 @@
 const path = require('path');
-const combineLoaders = require('webpack-combine-loaders');
 
 module.exports = {
   mode: 'development',
