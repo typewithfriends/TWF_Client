@@ -74,7 +74,6 @@ class Chat extends React.Component {
 const mapStateToProps = state => {
   return {
     username: state.username,
-    // socket: state.socket
   }
 }
 
@@ -82,5 +81,4 @@ export default connect(mapStateToProps)(Chat);
 
 Chat.propTypes = {
   username: PropTypes.string.isRequired,
-  // socket: PropTypes.object.isRequired
 }

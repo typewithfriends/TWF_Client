@@ -2,6 +2,7 @@ import './game.css';
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 
 import Progress from '../Progress/Progress.jsx';
 import TypingBox from '../TypingBox/TypingBox.jsx';
@@ -12,6 +13,7 @@ import { getCurrentLetter } from '../../actions/getCurrentLetter.js'
 import { updateProgress } from '../../actions/updateProgress.js'
 import { getUsersListStats } from '../../actions/getUsersListStats.js';
 import { checkGameStatus } from '../../actions/checkGameStatus.js';
+import { getGameWpm } from '../../actions/getGameWpm.js';
 
 class Game extends React.Component {
   constructor(props) {
@@ -21,7 +23,8 @@ class Game extends React.Component {
       count: 5,
       len: 0,
       start: 0,
-      end: 0
+      end: 0,
+      wpm: 0
     }
   }
 
@@ -50,15 +53,22 @@ class Game extends React.Component {
       // resets state for new game
       window.removeEventListener('keydown', this.getKey);
       this.props.getPrompt(`${username} won the game!`);
+
       this.props.changeView('gameRoom');
       this.props.getUsersListStats([]);
       this.props.updateProgress(0);
       this.props.getCurrentLetter(0);
       this.setState({ joined: false });
+
       let endTime = new Date().getTime();
       this.setState({ end: endTime });
-      console.log('len', this.state.len);
-      console.log('time is ', this.state.len / (this.state.end - this.state.start) * 1000, 'words per minute')
+      let wpm = this.state.len / (this.state.end - this.state.start) * 60000;
+      this.setState({ wpm });
+      this.props.getGameWpm(wpm);
+
+      if (this.props.loggedIn) {
+        this.updateStats();
+      }
     })
   }
 
@@ -75,7 +85,7 @@ class Game extends React.Component {
 
       // FIX THIS
       // starts game when num of players reached
-      if (this.props.usersListStats.length + 1 === 4) { // change this num to 4
+      if (this.props.usersListStats.length + 1 === 2) { // change this num to 4
         this.props.socket.emit('gameStart');
       }
       
@@ -126,6 +136,15 @@ class Game extends React.Component {
     }
   }
 
+  updateStats = () => {
+    axios.post('http://localhost:3000/api/userstats', {
+      username: this.props.username,
+      wpm: this.state.wpm
+    })
+      .then((d) => console.log(d))
+      .catch(err => console.error('error updating stats', err));
+  }
+
   render() {
     return (
       <div className="game">
@@ -153,7 +172,7 @@ const mapStateToProps = state => {
     progress: state.progress,
     usersListStats: state.usersListStats,
     gameStatus: state.gameStatus,
-    // socket: state.socket
+    loggedIn: state.loggedIn
   }
 }
 
@@ -163,7 +182,8 @@ export default connect(mapStateToProps, {
   getCurrentLetter,
   updateProgress,
   getUsersListStats,
-  checkGameStatus
+  checkGameStatus,
+  getGameWpm
 })(Game);
 
 Game.propTypes = {
@@ -174,5 +194,4 @@ Game.propTypes = {
   progress: PropTypes.number.isRequired,
   usersListStats: PropTypes.array.isRequired,
   gameStatus: PropTypes.bool.isRequired,
-  // socket: PropTypes.object.isRequired
 }

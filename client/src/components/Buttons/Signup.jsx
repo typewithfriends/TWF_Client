@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import { getUsername } from '../../actions/getUsername.js';
 import { checkLoginStatus } from '../../actions/checkLoginStatus.js';
@@ -23,6 +24,7 @@ class Signup extends React.Component {
 
   onSignupSubmit = () => {
     let { username, password, name, email } = this.state;
+    document.getElementById('message').innerHTML = '';
     axios.post('http://localhost:3000/api/users/signup', {
       username,
       password,
@@ -34,7 +36,10 @@ class Signup extends React.Component {
           this.props.checkLoginStatus(true);
           this.props.getUsername(username);
         } else {
-          console.log('User already exists');
+          document.getElementById('message').innerHTML = 'User already exists';
+          Array.prototype.slice.call(document.getElementsByClassName('signupinput')).forEach(input => {
+            input.value = '';
+          })
         }
       })
       .catch(err => console.error('error signing up', err));
@@ -45,18 +50,19 @@ class Signup extends React.Component {
       <div>
         <div className="signupmodal">
           <div> Username: 
-            <input name='username' onChange={this.onSignupKeyPress} required></input>
+            <input name='username' className='signupinput' onChange={this.onSignupKeyPress} required></input>
           </div>
           <div> Password: 
-            <input name='password' onChange={this.onSignupKeyPress} required></input>
+            <input name='password' className='signupinput' onChange={this.onSignupKeyPress} required></input>
           </div>
           <div> Name: 
-            <input name='name' onChange={this.onSignupKeyPress} required></input>
+            <input name='name' className='signupinput' onChange={this.onSignupKeyPress} required></input>
           </div>
           <div> Email: 
-            <input name='email' onChange={this.onSignupKeyPress} required></input>
+            <input name='email' className='signupinput' onChange={this.onSignupKeyPress} required></input>
           </div>
           <button onClick={this.onSignupSubmit}>Enter</button>
+          <div id="message"></div>
         </div>
       </div>
     )
@@ -73,3 +79,7 @@ export default connect(mapStateToProps, {
   getUsername,
   checkLoginStatus
 })(Signup);
+
+Signup.propTypes = {
+  loggedIn: PropTypes.bool.isRequired
+}

@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Route, Link, Redirect } from 'react-router-dom';
+import { Route, Link, Redirect, Switch } from 'react-router-dom';
 import io from 'socket.io-client';
 import PropTypes from 'prop-types';
 
@@ -31,7 +31,6 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    // this.props.passSocket(socket);
     let randNum = Math.floor(Math.random() * 10000) + 1;
     this.props.getUsername('Guest' + randNum);
     this.props.changeView('gameRoom');
@@ -49,7 +48,6 @@ class App extends React.Component {
     // shows progress of players in game.
     this.state.socket.on('progress', (stats) => {
       this.props.getUsersListStats(stats);
-      // console.log('stats', stats);
     });
   }
 
@@ -65,19 +63,19 @@ class App extends React.Component {
         <div className="nav">
           <div className="logo">Type With Friends</div>
           <div className="buttoncontainer">
-            <div className="button"><Link to='/game'>Game</Link></div>
+            <div className="button"><Link to='/'>Game</Link></div>
             {this.props.loggedIn && <div className="button"><Link to='/stats'>Stats</Link></div>}
             {!this.props.loggedIn && <div className="button"><Link to='/login'>Log In</Link></div>}
-            {this.props.loggedIn && <div className="button" onClick={this.signUserOut}><Link to='/game'>Log Out</Link></div>}
+            {this.props.loggedIn && <div className="button" onClick={this.signUserOut}><Link to='/'>Log Out</Link></div>}
             {!this.props.loggedIn && <div className="button"><Link to='/signup'>Sign Up</Link></div>}
           </div>
         </div>
-        <Route path='/game' render={(props) => <MainApp {...props} socket={this.state.socket} />} />
-        <Route path='/stats' component={Stats} />
-        <Route path='/login' render={() => (this.props.loggedIn ? (<Redirect to='/game' />) : (<Login loginUser={this.loginUser} />))} />
-        <Route path='/signup' render={() => (this.props.loggedIn ? (<Redirect to='/game' />) : (<Signup loginUser={this.loginUser} />))} />
-        {/* <Route path='/login' render={(props) => <Login {...props} loginUser={this.loginUser} />} />
-        <Route path='/signup' render={(props) => <Signup {...props} loginUser={this.loginUser} />} /> */}
+        <Switch>
+          <Route path='/' exact render={(props) => <MainApp {...props} socket={this.state.socket} />} />
+          <Route path='/stats' component={Stats} />
+          <Route path='/login' render={() => (this.props.loggedIn ? (<Redirect to='/' />) : (<Login loginUser={this.loginUser} />))} />
+          <Route path='/signup' render={() => (this.props.loggedIn ? (<Redirect to='/' />) : (<Signup loginUser={this.loginUser} />))} />
+        </Switch>
       </div>
     );
   }
@@ -102,5 +100,6 @@ export default connect(mapStateToProps, {
 
 App.propTypes = {
   view: PropTypes.string.isRequired,
-  gameStatus: PropTypes.bool.isRequired
+  gameStatus: PropTypes.bool.isRequired,
+  loggedIn: PropTypes.bool.isRequired
 }

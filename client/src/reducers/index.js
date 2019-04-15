@@ -9,6 +9,7 @@ import { getUsersListStatsReducer } from './getUsersListStatsReducer.js';
 import { checkGameStatusReducer } from './checkGameStatusReducer.js';
 import { passSocketReducer } from './passSocketReducer.js';
 import { checkLoginStatusReducer } from './checkLoginStatusReducer.js';
+import { getGameWpmReducer } from './getGameWpmReducer.js';
 
 
 export default combineReducers({
@@ -20,5 +21,6 @@ export default combineReducers({
   usersListStats: getUsersListStatsReducer,
   gameStatus: checkGameStatusReducer,
   socket: passSocketReducer,
-  loggedIn: checkLoginStatusReducer
+  loggedIn: checkLoginStatusReducer,
+  wpm: getGameWpmReducer
 });

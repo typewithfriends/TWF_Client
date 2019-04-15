@@ -22,16 +22,18 @@ class Login extends React.Component {
   onLoginSubmit = () => {
     let { username, password } = this.state;
     this.props.getUsername(username);
+    document.getElementById('message').innerHTML = '';
     axios.post('http://localhost:3000/api/users/login', {
       username,
       password
     })
       .then(({ data }) => {
+        console.log('data', data);
         if (data) {
           this.props.checkLoginStatus(true);
           this.props.getUsername(username);
         } else {
-          console.log('Incorrect username or password');
+          document.getElementById('message').innerHTML = 'Incorrect username or password';
         }
       })
       .catch(err => console.error('error logging in', err));
@@ -47,6 +49,7 @@ class Login extends React.Component {
           <input name='password' onChange={this.onLoginKeyPress}></input>
         </div>
         <button onClick={this.onLoginSubmit}>Enter</button>
+        <div id="message"></div>
       </div>
     )
   }
