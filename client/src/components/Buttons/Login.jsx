@@ -46,7 +46,7 @@ class Login extends React.Component {
           <input name='username' onChange={this.onLoginKeyPress}></input>
         </div>
         <div> Password: 
-          <input name='password' onChange={this.onLoginKeyPress}></input>
+          <input name='password' type='password' onChange={this.onLoginKeyPress}></input>
         </div>
         <button onClick={this.onLoginSubmit}>Enter</button>
         <div id="message"></div>

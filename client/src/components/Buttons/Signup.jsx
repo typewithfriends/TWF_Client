@@ -53,13 +53,13 @@ class Signup extends React.Component {
             <input name='username' className='signupinput' onChange={this.onSignupKeyPress} required></input>
           </div>
           <div> Password: 
-            <input name='password' className='signupinput' onChange={this.onSignupKeyPress} required></input>
+            <input name='password' className='signupinput' type='password' onChange={this.onSignupKeyPress} required></input>
           </div>
           <div> Name: 
             <input name='name' className='signupinput' onChange={this.onSignupKeyPress} required></input>
           </div>
           <div> Email: 
-            <input name='email' className='signupinput' onChange={this.onSignupKeyPress} required></input>
+            <input name='email' className='signupinput' type='email' onChange={this.onSignupKeyPress} required></input>
           </div>
           <button onClick={this.onSignupSubmit}>Enter</button>
           <div id="message"></div>
