@@ -1,21 +1,22 @@
-.topbar {
+.nav {
   position: absolute;
   right: 0;
   left: 0;
   top: 0;
   display: flex;
   justify-content: space-between;
-  height: 75px;
+  height: 50px;
   width: 100%;
-  line-height: 75px;
+  line-height: 50px;
+  background-color: lightgray;
 }
 
 .logo {
   font-weight: bold;
-  font-size: 50px;
+  font-size: 30px;
   font-style: italic;
   margin-left: 20px;
-  min-width: 400px;
+  /* min-width: 400px; */
 }
 
 .buttoncontainer {
@@ -25,8 +26,20 @@
 .button {
   width: 75px;
   text-align: center;
+
+}
+
+a {
+  all: unset;
 }
 
 .button:hover {
   border-bottom: 2px solid black;
+  cursor: pointer;
+}
+
+
+.splashscreen {
+  position: relative;
+  top: 60px;
 }

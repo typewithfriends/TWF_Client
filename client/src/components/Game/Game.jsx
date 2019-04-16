@@ -1,23 +1,30 @@
 import './game.css';
 import React from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import axios from 'axios';
 
 import Progress from '../Progress/Progress.jsx';
 import TypingBox from '../TypingBox/TypingBox.jsx';
-import Countdown from '../Countdown/Countdown.jsx';
+import Countdown from './Countdown.jsx';
 import { changeView } from '../../actions/changeView.js'
 import { getPrompt } from '../../actions/getPrompt.js'
 import { getCurrentLetter } from '../../actions/getCurrentLetter.js'
 import { updateProgress } from '../../actions/updateProgress.js'
 import { getUsersListStats } from '../../actions/getUsersListStats.js';
 import { checkGameStatus } from '../../actions/checkGameStatus.js';
+import { getGameWpm } from '../../actions/getGameWpm.js';
 
 class Game extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       joined: false,
-      count: 5
+      count: 5,
+      len: 0,
+      start: 0,
+      end: 0,
+      wpm: 0
     }
   }
 
@@ -25,30 +32,43 @@ class Game extends React.Component {
     this.props.socket.on('progress', (stats) => {
       this.props.getUsersListStats(stats);
     });
-
+    
     // on emission of gameStart, get back prompt, gameInProgress, and gameStartedAll
     this.props.socket.on('prompt', prompt => {
       this.props.getPrompt(prompt);
+      const len = this.props.prompt.split(' ').length;
+      this.setState({ len })
     })
-
+    
     this.props.socket.on('gameInProgress', gameInProgress => {
       this.props.checkGameStatus(gameInProgress);
     })
-
+    
     this.props.socket.on('gameStartedAll', () => {
       // this.startGame();
       this.countdown();
     });
-
+    
     this.props.socket.on('gameOver', username => {
       // resets state for new game
       window.removeEventListener('keydown', this.getKey);
       this.props.getPrompt(`${username} won the game!`);
+
       this.props.changeView('gameRoom');
       this.props.getUsersListStats([]);
       this.props.updateProgress(0);
       this.props.getCurrentLetter(0);
       this.setState({ joined: false });
+
+      let endTime = new Date().getTime();
+      this.setState({ end: endTime });
+      let wpm = this.state.len / (this.state.end - this.state.start) * 60000;
+      this.setState({ wpm });
+      this.props.getGameWpm(wpm);
+
+      if (this.props.loggedIn) {
+        this.updateStats();
+      }
     })
   }
 
@@ -65,7 +85,7 @@ class Game extends React.Component {
 
       // FIX THIS
       // starts game when num of players reached
-      if (this.props.usersListStats.length + 1 === 4) { // change this num to 4
+      if (this.props.usersListStats.length + 1 === 2) { // change this num to 4
         this.props.socket.emit('gameStart');
       }
       
@@ -87,6 +107,9 @@ class Game extends React.Component {
   }
 
   startGame = () => {
+    let startTime = new Date().getTime();
+    this.setState({ start: startTime });
+
     if (this.props.view === 'inGame') {
       console.log('game started!');
       window.addEventListener("keydown", this.getKey);
@@ -113,9 +136,18 @@ class Game extends React.Component {
     }
   }
 
+  updateStats = () => {
+    axios.post('http://localhost:3000/api/userstats', {
+      username: this.props.username,
+      wpm: this.state.wpm
+    })
+      .then((d) => console.log(d))
+      .catch(err => console.error('error updating stats', err));
+  }
+
   render() {
     return (
-        <div className="game">
+      <div className="game">
         <div id="progress" className="progress">
           {this.props.usersListStats.map((stat, i) => {
             return <Progress key={i} user={stat.username} progress={stat.progress} />
@@ -131,7 +163,7 @@ class Game extends React.Component {
 }
 
 const mapStateToProps = state => {
-  console.log(state)
+  console.log('state obj', state)
   return {
     view: state.view,
     prompt: state.prompt,
@@ -139,7 +171,8 @@ const mapStateToProps = state => {
     username: state.username,
     progress: state.progress,
     usersListStats: state.usersListStats,
-    gameStatus: state.gameStatus
+    gameStatus: state.gameStatus,
+    loggedIn: state.loggedIn
   }
 }
 
@@ -149,5 +182,16 @@ export default connect(mapStateToProps, {
   getCurrentLetter,
   updateProgress,
   getUsersListStats,
-  checkGameStatus
+  checkGameStatus,
+  getGameWpm
 })(Game);
+
+Game.propTypes = {
+  view: PropTypes.string.isRequired,
+  prompt: PropTypes.string.isRequired,
+  currentLetter: PropTypes.number.isRequired,
+  username: PropTypes.string.isRequired,
+  progress: PropTypes.number.isRequired,
+  usersListStats: PropTypes.array.isRequired,
+  gameStatus: PropTypes.bool.isRequired,
+}

@@ -1,32 +1,14 @@
-input:focus {
-  outline: none;
-}
-.mainapp {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  top: 100px;
-  left: 0;
-  right: 0;
-}
-
-.chat {
-  position: relative;
-  left: 40px;
-  border: 1px solid black;
-  height: 500px;
-  width: 400px;
-}
-
 .game {
   display: flex;
   flex-direction: column;
   align-items: center;
   border: 1px solid black;
-  width: 800px;
-  height: 800px;
+  padding: 20px;
+  width: 700px;
+  height: auto;
+  margin: 10px;
 }
 
-body {
-  overflow: hidden;
-}
+/* body {
+  overflow: scroll;
+} */
